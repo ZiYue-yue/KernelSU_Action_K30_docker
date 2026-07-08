@@ -94,10 +94,13 @@ jobs:
     - name: Download Clang-aosp
       if: env.USE_CUSTOM_CLANG != 'true'
       run: |
-        cd $GITHUB_WORKSPACE/kernel_workspace
-        mkdir clang-aosp
-        wget https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/${{ env.CLANG_BRANCH }}/clang-${{ env.CLANG_VERSION }}.tar.gz
-        tar -C clang-aosp/ -zxvf clang-${{ env.CLANG_VERSION }}.tar.gz
+        # 克隆 clang-r416183 版本（与你原配置版本一致）
+        git clone --depth=1 --branch clang-r416183 \
+        https://github.com/aosp-mirror/platform_prebuilts_clang_host_linux-x86 \
+        $GITHUB_WORKSPACE/kernel_workspace/clang-aosp
+
+        # 配置环境变量（路径与原脚本保持一致即可）
+        export PATH=$GITHUB_WORKSPACE/kernel_workspace/clang-aosp/bin:$PATH
 
     - name: Download Custom-Clang
       if: env.USE_CUSTOM_CLANG == 'true'
