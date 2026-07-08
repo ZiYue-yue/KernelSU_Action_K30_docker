@@ -290,6 +290,10 @@ jobs:
     - name: Make Anykernel3
       if: env.CHECK_FILE_IS_OK == 'true' && env.USE_CUSTOM_ANYKERNEL3 != 'true'
       run: |
+        cp ${{ github.workspace }}/kernel/arch/arm64/boot/${{ env.KERNEL_IMAGE_NAME }} ${{ github.workspace }}/AnyKernel3/
+        cp ${{ github.workspace }}/anykernel/anykernel.sh ${{ github.workspace }}/AnyKernel3/
+        cd ${{ github.workspace }}/AnyKernel3
+        zip -r9 cezanne-kernel-lxc-docker-ksu.zip * -x .git README.md
         cd $GITHUB_WORKSPACE/kernel_workspace
         git clone https://github.com/osm0sis/AnyKernel3 --depth=1 AnyKernel3
         sed -i 's/do.devicecheck=1/do.devicecheck=0/g' AnyKernel3/anykernel.sh
