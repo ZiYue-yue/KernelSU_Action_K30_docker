@@ -172,7 +172,14 @@ jobs:
           fi
           echo "GCC_32=CROSS_COMPILE_ARM32=$GITHUB_WORKSPACE/kernel_workspace/gcc-32/bin/${{ env.CUSTOM_GCC_32_BIN }}" >> $GITHUB_ENV
         fi
-
+    - name: Apply Docker/LXC config patches
+      run: |
+        cd ${{ github.workspace }}/kernel
+        # 将 docker_lxc.config 追加到生成的 .config 中
+        cat ${{ github.workspace }}/patches/docker_lxc.config >> .config
+        # 重新生成合法配置，自动处理依赖关系
+        make ARCH=arm64 olddefconfig
+        
     - name: Download mkbootimg tools
       if: env.BUILD_BOOT_IMG == 'true'
       run: |
